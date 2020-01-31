@@ -1,0 +1,351 @@
+﻿/*------------------------------------------------------------------------------------------
+	File Name   : version.h
+	Project     : SMRT Info
+	Description : SMRT Version Information
+
+	Writer      : 
+	Date        : 2018. 8.
+	Revision    : $Revision: 993 $
+	Copyright   : Piranti Corp.
+
+	[Revision History ]
+	1. 2018. 8. : Created
+
+-------------------------------------------------------------------------------------------*/
+
+#ifndef VERSION_H
+#define VERSION_H
+
+//========================================================================
+// Header
+
+//========================================================================
+// Define
+
+#define VERSION_MAIN			1
+#define VERSION_SUB				0
+#define VERSION_DETAIL			$WCREV$
+#define VERSION_BUILD			$REVSMRT$
+
+// 전처리 과정에서 문자열로 변환.	ex) A.B.C.D -xstr(x)-> 1.0.0.0 -str(x)-> "1.0.0.0"
+#define str(x)			#x				
+#define xstr(x)			str(x)
+
+//*
+//========================================================================
+// Visual Studio Version Info
+#define FILEVER			VERSION_MAIN, VERSION_SUB, VERSION_DETAIL, VERSION_BUILD
+#define PRODUCTVER		FILEVER
+
+#define FILEVER2		VERSION_MAIN.VERSION_SUB.VERSION_DETAIL.VERSION_BUILD
+#define STRFILEVER		xstr(FILEVER2)
+
+#define STRPRODUCTVER	STRFILEVER
+//========================================================================
+//*/
+
+void version_History();					// Print Version History
+
+/*
+Version History
+
+vX.X.X : 12/01/19
+	- 내용.
+	
+v1.3.0.X
+	16/08/03 - pjh
+	* COP : 버튼 색상 변경.
+	 - COP버튼 눌림상태에서 색상 진하게 변경.
+	 ( button_pressed_cap_left.png / button_pressed_cap_right.png / button_pressed_stretch.png )
+
+	16/08/03 - pjh
+	* COP : 역사 수동설정기능 구현 중.
+	 - 역사수동설정 UI Enable.
+
+	16/08/09 - pjh
+	* COP : 기능방송 관련
+	 - Funcation PA 1 ~ 5로 변경.
+	 - 5개까지 선택가능 하도록 수정.
+
+	* COP
+	 - MessageList.xml 파싱.
+	 - 역사 수동설정시 Manual Set 화면 동작 구현.
+
+	16/08/09 - pjh
+	* COP
+	 - cop.pro : WIN32에서 Debug / Release 관련 컴파일 옵션 분리.
+
+	16/08/11 - pjh
+	* COP
+	 - 객실 / COP 볼륨값 저장 부분 추가.
+
+	16/08/12 - pjh
+	* COP
+	 - 환경변수 저장 부분 추가 : COP/cop_Env.h/cpp
+
+	16/08/13 - pjh
+	* COP
+	 - uiDriveInfo.cpp
+	 - MessageList.xml : 데이터파싱 및 수동설정 역사 화면 출력.
+	 //	MessageList.xml의 Station정보를 Load하여 출력.
+	 - 수동설정시 역사정보 출력 완료.
+
+	16/08/17 - pjh
+	* COP
+	 - 컴파일 안되는 현상 디버깅.
+	  -> main.cpp header 위치 변경.
+	 - 역사 수동설정
+	  -> 역사 선택시 위/아레 방향키 이동 Diable.
+
+	 - COP 스페셜 Message 추가관련 역사필드 없는경우,
+	   MessageList.xml 파싱 문제 디버깅.
+	  -> Corrider값이 0인경우
+	  -> 스페셜 Message 추가관련 에외처리.
+
+	* COP
+	 A. COP S/W – 종착역 수동설정 구현. 
+		1)	역사 수동설정 선택 시 위/아래 이동 Disable
+		2)	종착역표시 -> 행선지이름으로 변경.
+
+	 B. COP S/W - DIF(전면행선표시) 스페셜 메시지현시. 
+		1)	Route Table의 Corridor 노선 정보 값이 0인경우 스페셜 역사로 인식하도록 수정.
+		2)	스페셜 역사인 경우 하단 Station 역사 Disable.
+
+	16/08/22
+	* configure 추가. ( 컴파일 예시 )
+	 - ./configure [Platform]
+	   ex) ./configure arm    |   ./configure x86
+	   make clean; make
+
+	16/08/25
+	* COP
+	 - 포르투갈어 변경시 Kill 되는 현상수정.
+
+v1.3.1.X
+	16/08/23
+	* DIB
+	 - 초기기동시 상태정보 검지 Delay추가.
+	 -> dib_main.cpp - #define DEFAULT_DEVCHECK_DELAY 300 ( 5분 Delay )
+
+	16/08/24
+	* /script/upgade/upApp.exp 추가.
+	 - linux에서 Upgrade시 expect 스크립트 추가.
+	 - DIB / COP 에서 시험. ( 완료 )
+
+v1.3.3.X
+	16/12/15
+	* MCB
+	 - multicast 주소 Testbench2 추가. ( cop통신용 )
+	 - 거리트리거시 0보다 작은 값( -Trigger )인 경우 remainDistance를 이용하여 Trigger되도록 수정.
+
+v1.3.4.X
+	16/12/16
+	* MCB
+	 - 남은거리 트리거 디버깅.
+
+	16/12/21
+	 * mcb 동작 스크립트수정.
+		1. 초기 부팅시 check disk 추가.
+		2. nvr ssd에 날짜 시간별로 분류. ( ex) /20161230/23/ )
+		2. power off시 count 추가. ( /etc/log_ups_time )
+
+v1.3.5.X
+	16/12/25
+	* MCB
+	 - PID/PIB/DRM 자막 전송 추가. ( 확인완료 )
+
+	* COP
+	 -	역사 수동설정시 수동설정 모드에서 
+		COP메뉴상에 역사 글씨 자동갱신 안되도록 수정.
+
+	16/12/26
+	* COP
+	 - 언어변경시 변경된 언어 설정값 저장.
+	 - UIDriveInfo::AddSpecialDest()
+		messagelist.xml에서 노선이 0인경우 스페셜 Route로 자동 추가.
+
+	* MCB
+	 - 수동모드에서 역사 이동이 완료될경우 COP 수동모드 -> 자동모드 변경. ( 미완료 )
+
+v1.3.6.X
+	16/12/30
+	* MCB
+	 - 역사 수동설정시 출입문 열림 방향에 DRM표시되도록 수정.
+	  -> 수동설정모드에서만 DB(messagelist.xml)을 참조함.
+
+	* COP
+	 - 기능방송 / 음악 Play안되는 문제 수정.
+
+v1.4.0.X
+	17/01/04
+	* MCB
+	 - openRTSP 수정.
+	  -> openRTSP 폴더별로 저장되도록 수정. ( 영상저장문제 디버깅 - 컴파일러문제로 MCB 컴파일러를 사용해야함 )
+
+v1.5.0.X
+	17/02/23
+	* MCB
+	 - Manual Mode 디버깅.
+	 - [ HitLib/Protocol/SMRT/SMRTOperMode.cpp ]
+	  -> 메뉴얼 모드 설정시 값이 저장안되는 문제 디버깅.
+
+v1.5.1.X
+	17/04/24
+	* MCB
+	 - Manual Mode 동작 수정. ( PID 중앙 다음역 현시 관련 )
+	 -> Auto Mode 시나리오와 동일하게 동작하도록 수정함.
+
+	  1) 역사 내에서 출입문 여러번 열림 닫힘으로 인하여 다음역으로 변경되는 현상.
+	   -> 열차 출입문 닫힘 후 열차 진행시 변경되도록 수정.
+	  2) 열차 역사 도착시 출입문이 열리는 시점에 다음역으로 변경되는 현상
+	   -> 출입문이 닫히고 열차 출발시 다음역으로 변경되도록 수정.
+
+v1.5.2.X
+	17/05/25
+	* MCB
+	 - [ HitLib/Protocol/SMRT/SMRTNet.cpp ]
+	 - TCP Server Connection - Timeout 발생시 
+	   Connection이 맺어져 있지 않은 상태로 소켓이 남아.
+	   비정상 소켓으로 통신하여 S/W Kill되는 현상 수정.
+
+v1.5.3.X
+	17/05/27
+	* MCB
+	 - [ /HitLib/HitLib/Protocol/SMRT/SMRTHRNotifyCmd.cpp ] - HitLib ( Rev. 2241 )
+		- NULL 포인터 참조시 S/W Kill되는 현상 수정. _P( ) 매크로 적용. ( NULL Pointer check )
+		- 수정전 : CRoute::m_gpRoute->GetRouteStationIndex( iNext );
+		- 수정후 : _P( CRoute::m_gpRoute )->GetRouteStationIndex( iNext );
+
+v1.5.4.X
+	17/08/06
+	* MCB
+	 - [ /HitLib/HitLib/Protocol/SMRT/SMRTHRNotifyCmd.cpp ] - HitLib ( Rev. 2440 )
+	 - 역사 수동 설정시 역사 갱신 안되는 버그 수정.
+
+v1.5.5.X
+	17/08/21
+	* COP
+	 - 역사 수동설정시 역사 [manual] 버튼으로 변경되지 않는 현상 디버깅.
+	 - manual mode 명령시 ( LineID 를 -1로 주면 MCB 역사가 업데이트됨. )
+	  -> MCB에서 역사 업데이트시 다음역이 NULL이므로 다시 Auto Mode명령을 주는 동작으로 인하여
+	    cop의 Mode버튼이 auto로 변경됨.
+	  -> manual mode 변경시 LineID 0으로 주는것으로 수정함.
+
+v1.5.6.X
+	17/11/15
+	* COP
+	 - [Auto Volumn] 설정안되는 버그 수정.
+
+v1.5.7.X
+	17/11/19
+	* MCB
+	 - 메뉴얼 모드로 COP에서 역사 선택시 PID/DRM화면에 바로 적용.
+	 - 차량 회차구간에서 운전실 Master / Slave변경시 PID/DRM화면에 바로 적용.
+
+v1.5.8.X
+	17/12/01
+	* MCB - ( HitLib/Protocol/SMRTHRNotifyCmd.cpp )
+	 - 회차구간 PID/DRM화면에 업데이트 조건 추가.
+	 -> 회차구간 조건 추가. ( 마스터 변경 후 출입문이 열릴때 까지. )
+
+v1.5.9.X
+	17/12/14
+	* MCB - ( HitLib/Protocol/SMRTHRNotifyCmd.cpp )
+	 - Interface Data Logging기능 추가.
+	   ( /mnt/ssd1/log/SMRTApp_10.128.0.158_20171214_InfLog.txt ) - Interface Log
+	   ( /mnt/ssd1/log/SMRTApp_10.128.0.158_20171214_evt.txt )	- Event Log
+
+v1.6.0.X
+	18/01/11
+	* MCB - ( HitLib/Protocol/SMRTCctvRecStat.cpp )
+	 - CCTV녹화 상태 검사 추가.
+	 - SSD존재여부 / SSD 읽기전용상태검사 / CCTV 녹화상태검사.
+
+	* DIB - ( HitLib/Protocol/SMRTEnv.cpp )
+	 - DBS SD송신비트 변경
+	 - DVR(SSD)상태정보 비트를 활용하여 CCTV녹화상태 비트 송신.
+
+v1.6.1.X
+	18/01/19
+	* MCB - ( HitLib/Protocol/SMRTCmnDevStat.cpp )
+	 - MCB의 경우 상태정보 MULTICAST_TESTBENCH2 송부추가.
+	  -> COP에서 받아서 현시해야 함.
+
+	18/02/02
+	* COP
+	 - DVR상태에 따른 Popup 구현.
+
+------------------------------------------------------------
+[ 구현필요사항 ]
+------------------------------------------------------------
+
+------------------------------------------------------------
+* COP		-	개발환경(QT)
+  [ COP ]
+	1. 역사 수동설정 기능.
+		- 통신 Data에 따른 역사정보 갱신 구현.
+
+------------------------------------------------------------
+* SMRTApp	-	개발환경(Linux)
+  [ AVC(MCB) ]
+	1. 편집 Data에 따른 열차 운행 동작 구현.
+
+		1) MessageList.xml Data파싱.
+		2) 트리거에 따른 동작.
+			- 트리거함수 구현	-------------- [완료]
+			- 자동방송출력.
+			- PID/PIB/DRM 자막출력.
+			  자막 라인별로 시간(sec)에 따른 자막 출력 구현필요.
+
+	2. 역사 수동설정 기능.
+		1) 역사 수동설정에 따른 역사 출력.
+
+------------------------------------------------------------
+* DIB	-	개발환경(Linux)
+  [ AVC(DIB) ]
+    1. 초기기동시 상태정보 응답 Delay구현.
+	2. Window 환경에서 MvbMgr Thread 동작하도록.
+
+------------------------------------------------------------
+
+------------------------------------------------------------
+[ 개선필요사항 ]
+------------------------------------------------------------
+* DIB		-	개발환경(Linux)
+	- dib_main.cpp
+	 -> Window용 getopt() 구현필요.
+	  getopt_long()
+
+------------------------------------------------------------
+* 공통(SMRTApp)		-	개발환경(Linux)
+	- Upgrade 이미지 패키징.
+	- Upgrade용 스크립트 개선 필요.
+
+
+*/
+
+#define		VERSION_HISTORY			"\
+\n	--------------------------				\
+\n	Version History							\
+\n	v1.0.0 : 18/01/29						\
+\n	- 초기버전.								\
+\n											\
+\n"
+
+/*
+[ 구현일정 ]
+	12/01
+
+[ 구현사항 ]
+	1. Window / Linux 호환가능하도록 구성.
+	2. 
+
+[ 장애내역 ]
+	1. ...
+
+[ 디버깅내역 ]
+	1. ...
+
+*/
+
+#endif	//	VERSION_H
